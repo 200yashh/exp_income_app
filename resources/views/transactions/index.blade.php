@@ -5,6 +5,16 @@
 
     <div class="py-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <a href="{{ route('transactions.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded mb-6 inline-block">➕ Add Transaction</a>
+        <form method="GET" action="{{ route('transactions.index') }}" class="mb-6 flex items-center gap-2">
+            <label for="month" class="font-medium">Filter by Month:</label>
+            <select name="month" id="month" class="border rounded px-2 py-1">
+            <option value="">All</option>
+            @foreach([1 => 'January',2 => 'February',3 => 'March',4 => 'April',5 => 'May',6 => 'June',7 => 'July',8 => 'August',9 => 'September',10 => 'October',11 => 'November',12 => 'December',] as $key => $title)
+                <option value="{{ $key }}" {{ request('month') == $key ? 'selected' : '' }}>{{ $title }}</option>
+            @endforeach
+            </select>
+            <button type="submit" class="bg-gray-700 text-white px-3 py-1 rounded">Filter</button>
+        </form>
 
         @foreach($summary as $month => $data)
             <div class="bg-white shadow-md rounded p-4 mb-8">
@@ -21,6 +31,7 @@
                         <tr class="bg-gray-100">
                             <th class="border px-4 py-2 text-left">Date</th>
                             <th class="border px-4 py-2 text-left">Type</th>
+                            <th class="border px-4 py-2 text-left">Method</th>
                             <th class="border px-4 py-2 text-left">Title</th>
                             <th class="border px-4 py-2 text-left">Amount (₹)</th>
                         </tr>
@@ -35,6 +46,9 @@
                                     @else
                                         <span class="text-red-600 font-semibold">Expense</span>
                                     @endif
+                                </td>
+                                <td class="border px-4 py-2">
+                                    {{ $t->method??'' }}
                                 </td>
                                 <td class="border px-4 py-2">{{ $t->title }}</td>
                                 <td class="border px-4 py-2">₹{{ number_format($t->amount, 2) }}</td>
